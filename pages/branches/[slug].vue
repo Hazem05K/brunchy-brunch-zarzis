@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { findBranchBySlug } from '~/data/branches'
 import { products } from '~/data/products'
+import { appPath } from '~/utils/app-path'
 import { canonicalUrl } from '~/utils/seo'
 
 const route = useRoute()
 const config = useRuntimeConfig()
+const appBaseURL = config.app.baseURL
 const branch = computed(() => findBranchBySlug(String(route.params.slug)))
 if (!branch.value) {
   throw createError({ statusCode: 404, statusMessage: 'Branche introuvable' })
@@ -36,12 +38,13 @@ useHead({
           <h1 class="section-title mt-4 max-w-3xl">{{ branch.name }}</h1>
           <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-600">{{ branch.description || 'Les informations de cette branche seront ajoutées dès qu’elles auront été confirmées.' }}</p>
           <NuxtLink to="#demande" class="button-primary mt-8">Commander auprès de cette branche <span aria-hidden="true">↗</span></NuxtLink>
-          <p class="mt-3 text-xs text-slate-500">La demande est adressée directement à {{ branch.name }}.</p>
+          <p v-if="!config.public.staticSite" class="mt-3 text-xs text-slate-500">La demande est adressée directement à {{ branch.name }}.</p>
+          <p v-else class="mt-3 text-xs text-slate-500">L’envoi des demandes est désactivé sur cette version statique du site.</p>
         </div>
         <figure class="relative isolate aspect-[1.25] overflow-hidden rounded-[2rem] bg-navy shadow-card">
           <img
             class="size-full object-cover"
-            :src="branch.image || '/images/brunch-illustrative.jpg'"
+            :src="appPath(branch.image || '/images/brunch-illustrative.jpg', appBaseURL)"
             :alt="`Photo culinaire illustrative de ${branch.name}, ne représentant pas son menu réel`"
             width="900"
             height="600"
@@ -93,11 +96,12 @@ useHead({
         <aside class="rounded-[1.7rem] bg-navy p-7 text-white">
           <span class="text-sm font-bold uppercase tracking-[0.18em] text-sky">La suite</span>
           <h2 class="mt-4 font-display text-2xl font-normal">On s’occupe de votre demande.</h2>
-          <ol class="mt-5 space-y-4 text-sm leading-6 text-blue-100">
+          <ol v-if="!config.public.staticSite" class="mt-5 space-y-4 text-sm leading-6 text-blue-100">
             <li><span class="mr-2 font-bold text-sky">01</span>Votre demande est envoyée à cette branche.</li>
             <li><span class="mr-2 font-bold text-sky">02</span>L’équipe vérifie la disponibilité et les détails.</li>
             <li><span class="mr-2 font-bold text-sky">03</span>La branche vous recontacte pour confirmer.</li>
           </ol>
+          <p v-else class="mt-5 text-sm leading-6 text-blue-100">Ce site est hébergé sous forme de fichiers statiques et ne dispose pas de service d’envoi. Contactez-nous via les coordonnées affichées sur la page Contact.</p>
           <p class="mt-6 border-t border-white/15 pt-5 text-xs leading-5 text-blue-100">L’envoi de la demande ne confirme pas automatiquement une commande ni une livraison.</p>
         </aside>
       </div>

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { branches } from '~/data/branches'
+import { appPath } from '~/utils/app-path'
 import { canonicalUrl } from '~/utils/seo'
 
 const config = useRuntimeConfig()
+const appBaseURL = config.app.baseURL
 const canonical = canonicalUrl('/', config.public.siteUrl)
 
 useSeoMeta({
@@ -67,7 +69,7 @@ useHead({
           <div class="relative aspect-[0.92] overflow-hidden rounded-[2.6rem] bg-navy shadow-[0_35px_90px_rgba(2,34,82,0.2)] sm:aspect-square">
             <img
               class="absolute inset-0 size-full object-cover"
-              src="/images/brunch-illustrative.jpg"
+              :src="appPath('/images/brunch-illustrative.jpg', appBaseURL)"
               alt="Photo illustrative d'une table de brunch, sans lien avec le menu réel de Brunchy Brunch"
               width="1400"
               height="933"

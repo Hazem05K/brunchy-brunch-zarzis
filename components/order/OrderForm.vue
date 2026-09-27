@@ -6,6 +6,7 @@ const props = defineProps<{
 
 const config = useRuntimeConfig()
 const siteKey = config.public.recaptchaSiteKey
+const staticSite = config.public.staticSite
 const form = reactive({
   name: '',
   phone: '',
@@ -23,10 +24,10 @@ const recaptchaToken = ref('')
 const captcha = ref<{ reset: () => void } | null>(null)
 
 const minDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Tunis' })
-const configReady = computed(() => Boolean(siteKey))
+const configReady = computed(() => !staticSite && Boolean(siteKey))
 
 async function submitOrder() {
-  if (!configReady.value || !recaptchaToken.value || loading.value) return
+  if (staticSite || !configReady.value || !recaptchaToken.value || loading.value) return
 
   feedback.value = undefined
   loading.value = true
@@ -71,7 +72,10 @@ async function submitOrder() {
     <div v-if="feedback" :class="feedback.type === 'success' ? 'notice-success' : 'notice-error'" role="status" aria-live="polite">
       {{ feedback.text }}
     </div>
-    <div v-if="!configReady" class="notice-info" role="status">
+    <div v-if="staticSite" class="notice-info" role="status">
+      L’envoi des demandes est désactivé sur cette version statique : aucun serveur n’est disponible pour transmettre votre commande. Consultez la page Contact pour les coordonnées disponibles.
+    </div>
+    <div v-else-if="!configReady" class="notice-info" role="status">
       Le formulaire de demande pour {{ branchName }} sera disponible après la configuration de reCAPTCHA. Vous pouvez nous contacter pour toute question.
     </div>
 
@@ -122,7 +126,7 @@ async function submitOrder() {
       <NuxtLink to="/privacy" class="font-semibold text-navy underline underline-offset-2">En savoir plus</NuxtLink>
     </p>
     <button class="button-primary w-full sm:w-auto" type="submit" :disabled="loading || !configReady || !recaptchaToken">
-      {{ loading ? 'Envoi en cours…' : 'Commander' }}
+      {{ staticSite ? 'Envoi indisponible' : loading ? 'Envoi en cours…' : 'Commander' }}
       <span v-if="!loading" aria-hidden="true">→</span>
     </button>
   </form>

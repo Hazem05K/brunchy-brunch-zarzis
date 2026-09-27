@@ -20,15 +20,39 @@ Copiez `.env.example` vers `.env` avec votre explorateur ou la commande `Copy-It
 
 Le serveur local est disponible sur `http://localhost:3000`.
 
-## Vérification et build
+## Build statique et prévisualisation
 
-```sh
-npm run typecheck
-npm run build
-npm run preview
+```powershell
+$env:NUXT_APP_BASE_URL = "/"
+$env:NUXT_PUBLIC_SITE_URL = "https://example.invalid"
+$env:NUXT_PUBLIC_STATIC_SITE = "true"
+npm run generate
 ```
 
-`npm run generate` produit un frontend pré-rendu, mais **ne déploie pas** la route Nitro `/api/order`. Utilisez un hébergement Node.js compatible Nuxt/Nitro pour que le formulaire fonctionne.
+`npm run generate` écrit le site pré-rendu dans `.output/public`. Pour le prévisualiser localement, utilisez un serveur de fichiers statiques :
+
+```powershell
+python -m http.server 8000 --directory .output/public
+```
+
+Ouvrez `http://localhost:8000`. GitHub Actions définit automatiquement la base URL du dépôt lors du déploiement. Pour un domaine personnalisé, configurez `NUXT_APP_BASE_URL=/` et `NUXT_PUBLIC_SITE_URL` avec l’URL de ce domaine.
+
+GitHub Pages peut héberger ces fichiers sans serveur Node.js. Les routes Nitro `/api/order` et `/api/contact` ne sont pas incluses dans un déploiement statique : les formulaires d’envoi sont donc désactivés sur GitHub Pages, avec un message explicatif. Le code des routes reste disponible pour un hébergement Nuxt/Nitro avec serveur.
+
+## Déploiement GitHub Pages
+
+Le workflow `.github/workflows/deploy.yml` lance `npm ci` et `npm run generate` à chaque push sur `main`, puis publie `.output/public` au moyen des actions officielles GitHub Pages. Il calcule par défaut la base URL nécessaire à un dépôt de projet, par exemple `/brunchy-brunch-zarzis/`.
+
+Dans le dépôt GitHub, ouvrez **Settings > Pages > Build and deployment**, sélectionnez **GitHub Actions** comme source. Vérifiez aussi que les Actions sont autorisées dans **Settings > Actions > General**. Le dépôt peut rester privé; la disponibilité de Pages pour un dépôt privé dépend du plan GitHub de l’organisation ou du compte. Le site publié peut être public sans rendre le code source public.
+
+Pour un domaine personnalisé, configurez-le dans **Settings > Pages > Custom domain**, puis ajoutez les variables de dépôt **Settings > Secrets and variables > Actions > Variables** :
+
+| Variable | Valeur |
+| --- | --- |
+| `PAGES_BASE_URL` | `/` |
+| `PAGES_SITE_URL` | `https://votre-domaine.example` |
+
+Sans ces variables, le workflow utilise automatiquement l’URL GitHub Pages du dépôt. Pour GitHub Pages de dépôt, ne configurez pas `PAGES_BASE_URL` manuellement.
 
 ## Configuration
 

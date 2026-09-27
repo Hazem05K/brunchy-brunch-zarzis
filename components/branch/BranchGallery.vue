@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { appPath } from '~/utils/app-path'
+
 const props = defineProps<{
   branchName: string
   photos: string[]
 }>()
 
+const appBaseURL = useRuntimeConfig().app.baseURL
 const track = ref<HTMLElement>()
 const activeIndex = ref(0)
 let updateFrame = 0
@@ -82,7 +85,7 @@ onBeforeUnmount(() => cancelAnimationFrame(updateFrame))
         >
           <img
             class="size-full object-cover"
-            :src="photo"
+            :src="appPath(photo, appBaseURL)"
             :alt="`Photo culinaire illustrative ${index + 1} pour ${branchName}, sans lien avec son menu réel`"
             width="1100"
             height="730"

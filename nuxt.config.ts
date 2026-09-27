@@ -1,5 +1,8 @@
 import { branches } from './data/branches'
 
+const appBaseURL = process.env.NUXT_APP_BASE_URL || '/'
+const normalizedAppBaseURL = appBaseURL.endsWith('/') ? appBaseURL : `${appBaseURL}/`
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-04-01',
   devtools: { enabled: false },
@@ -23,22 +26,25 @@ export default defineNuxtConfig({
     recaptchaSecretKey: '',
     public: {
       siteUrl: '',
+      staticSite: false,
       recaptchaSiteKey: '',
       contactPhone: process.env.NUXT_PUBLIC_CONTACT_PHONE || '',
       contactEmail: process.env.NUXT_PUBLIC_CONTACT_EMAIL || '',
     },
   },
   app: {
+    baseURL: normalizedAppBaseURL,
     head: {
       htmlAttrs: { lang: 'fr' },
       meta: [
         { name: 'theme-color', content: '#022252' },
         { name: 'color-scheme', content: 'light' },
       ],
-      link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+      link: [{ rel: 'icon', type: 'image/svg+xml', href: `${normalizedAppBaseURL}favicon.svg` }],
     },
   },
   nitro: {
+    preset: 'static',
     routeRules: {
       '/**': {
         headers: {

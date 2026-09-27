@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { Branch } from '~/data/branches'
+import { appPath } from '~/utils/app-path'
 
 defineProps<{ branch: Branch }>()
+const appBaseURL = useRuntimeConfig().app.baseURL
 </script>
 
 <template>
@@ -9,7 +11,7 @@ defineProps<{ branch: Branch }>()
     <NuxtLink :to="`/branches/${branch.slug}`" class="relative block aspect-[1.45] overflow-hidden bg-mist" :aria-label="`Découvrir ${branch.name}`">
       <img
         class="size-full object-cover transition duration-500 group-hover:scale-105"
-        :src="branch.image || '/images/brunch-illustrative.jpg'"
+        :src="appPath(branch.image || '/images/brunch-illustrative.jpg', appBaseURL)"
         :alt="`Photo culinaire illustrative pour ${branch.name}, ne représentant pas son menu réel`"
         width="900"
         height="600"

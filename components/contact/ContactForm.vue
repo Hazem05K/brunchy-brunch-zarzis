@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const config = useRuntimeConfig()
 const siteKey = config.public.recaptchaSiteKey
+const staticSite = config.public.staticSite
 const form = reactive({
   name: '',
   phone: '',
@@ -12,10 +13,10 @@ const recaptchaToken = ref('')
 const captcha = ref<{ reset: () => void } | null>(null)
 const loading = ref(false)
 const feedback = ref<{ type: 'success' | 'error'; text: string }>()
-const configReady = computed(() => Boolean(siteKey))
+const configReady = computed(() => !staticSite && Boolean(siteKey))
 
 async function submitContact() {
-  if (!configReady.value || !recaptchaToken.value || loading.value) return
+  if (staticSite || !configReady.value || !recaptchaToken.value || loading.value) return
 
   feedback.value = undefined
   loading.value = true
@@ -56,7 +57,10 @@ async function submitContact() {
     <div v-if="feedback" :class="feedback.type === 'success' ? 'notice-success' : 'notice-error'" role="status" aria-live="polite">
       {{ feedback.text }}
     </div>
-    <div v-if="!configReady" class="notice-info" role="status">
+    <div v-if="staticSite" class="notice-info" role="status">
+      L’envoi des messages est désactivé sur cette version statique : aucun serveur n’est disponible pour transmettre votre message. Utilisez les coordonnées de contact affichées sur cette page.
+    </div>
+    <div v-else-if="!configReady" class="notice-info" role="status">
       Le formulaire sera disponible après la configuration de reCAPTCHA.
     </div>
 
@@ -91,7 +95,7 @@ async function submitContact() {
       <NuxtLink to="/privacy" class="font-semibold text-navy underline underline-offset-2">Confidentialité</NuxtLink>
     </p>
     <button class="button-primary w-full sm:w-auto" type="submit" :disabled="loading || !configReady || !recaptchaToken">
-      {{ loading ? 'Envoi en cours…' : 'Envoyer mon message' }}
+      {{ staticSite ? 'Envoi indisponible' : loading ? 'Envoi en cours…' : 'Envoyer mon message' }}
       <span v-if="!loading" aria-hidden="true">→</span>
     </button>
   </form>
