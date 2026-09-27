@@ -13,7 +13,6 @@ const { t, localizePath } = useLocale()
         <h2 class="text-sm font-bold uppercase tracking-[0.16em] text-sky">{{ t('Découvrir') }}</h2>
         <ul class="mt-4 space-y-3 text-sm text-blue-100">
           <li><NuxtLink :to="localizePath('/branches')" class="hover:text-white">{{ t('Nos branches') }}</NuxtLink></li>
-          <li><NuxtLink :to="localizePath('/branches')" class="hover:text-white">{{ t('Choisir sa branche') }}</NuxtLink></li>
           <li><NuxtLink :to="localizePath('/contact')" class="hover:text-white">{{ t('Contact') }}</NuxtLink></li>
         </ul>
       </div>

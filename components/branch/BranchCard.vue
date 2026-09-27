@@ -32,7 +32,6 @@ const { t, localizePath } = useLocale()
       <h3 class="text-xl leading-snug text-navy">{{ branch.name }}</h3>
       <p class="mt-2 text-sm leading-6 text-slate-500">{{ t(branch.description || '') }}</p>
       <div class="mt-auto flex flex-wrap gap-3 pt-6">
-        <NuxtLink class="button-outline flex-1" :to="localizePath(`/branches/${branch.slug}`)">{{ t('Découvrir') }}</NuxtLink>
         <NuxtLink class="button-primary flex-1" :to="localizePath(`/branches/${branch.slug}#demande`)">{{ t('Commander ici') }}</NuxtLink>
       </div>
     </div>

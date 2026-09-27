@@ -54,7 +54,6 @@ useHead({
           </p>
           <div class="mt-9 flex flex-col gap-3 sm:flex-row">
             <NuxtLink :to="localizePath('/branches')" class="button-primary">{{ t('Choisir ma branche') }} <span aria-hidden="true">↗</span></NuxtLink>
-            <NuxtLink :to="localizePath('/branches')" class="button-outline">{{ t('Voir nos branches') }}</NuxtLink>
           </div>
           <div class="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm font-semibold text-slate-500">
             <span><span class="me-2 text-navy" aria-hidden="true">✳</span>{{ t('À Zarzis') }}</span>

@@ -41,7 +41,6 @@ watch(() => route.fullPath, () => {
         <NuxtLink class="nav-link" :to="localizePath('/')">{{ t('Accueil') }}</NuxtLink>
         <NuxtLink class="nav-link" :to="localizePath('/branches')">{{ t('Branches') }}</NuxtLink>
         <NuxtLink class="nav-link" :to="localizePath('/contact')">{{ t('Contact') }}</NuxtLink>
-        <NuxtLink class="button-primary mt-2 md:mt-0" :to="localizePath('/branches')">{{ t('Choisir sa branche') }} <span aria-hidden="true">↗</span></NuxtLink>
         <button
           class="nav-link rounded-lg border border-[#E9C46A]/70 px-3 py-2"
           type="button"
