@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const menuOpen = ref(false)
 const route = useRoute()
+const { locale, t, localizePath, toggleLocale } = useLocale()
 
 watch(() => route.fullPath, () => {
   menuOpen.value = false
@@ -10,11 +11,11 @@ watch(() => route.fullPath, () => {
 <template>
   <header class="relative z-20 border-b border-[#E9C46A]/50 bg-cream">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 lg:px-8">
-      <NuxtLink to="/" class="flex items-center gap-3 rounded-lg" aria-label="Brunchy Brunch Zarzis, accueil">
+      <NuxtLink :to="localizePath('/')" class="flex items-center gap-3 rounded-lg" :aria-label="t('Brunchy Brunch Zarzis, accueil')">
         <span class="grid size-11 place-items-center rounded-2xl bg-navy font-display text-lg text-white">BB</span>
         <span class="leading-tight">
           <span class="block font-display text-xl leading-none tracking-wide text-navy">Brunchy Brunch</span>
-          <span class="mt-1 block text-[10px] font-bold tracking-[0.2em] text-slate-500">ZARZIS</span>
+          <span class="mt-1 block text-[10px] font-bold tracking-[0.2em] text-slate-500">{{ t('Zarzis') }}</span>
         </span>
       </NuxtLink>
 
@@ -23,7 +24,7 @@ watch(() => route.fullPath, () => {
         type="button"
         :aria-expanded="menuOpen"
         aria-controls="primary-navigation"
-        :aria-label="menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'"
+        :aria-label="t(menuOpen ? 'Fermer le menu' : 'Ouvrir le menu')"
         @click="menuOpen = !menuOpen"
       >
         <span class="text-xl" aria-hidden="true">{{ menuOpen ? '×' : '☰' }}</span>
@@ -35,12 +36,18 @@ watch(() => route.fullPath, () => {
           'absolute left-0 right-0 top-full flex flex-col gap-1 border-b border-slate-100 bg-cream p-5 shadow-card md:static md:flex md:flex-row md:items-center md:gap-8 md:border-0 md:p-0 md:shadow-none',
           menuOpen ? 'flex' : 'hidden md:flex',
         ]"
-        aria-label="Navigation principale"
+        :aria-label="t('Navigation principale')"
       >
-        <NuxtLink class="nav-link" to="/">Accueil</NuxtLink>
-        <NuxtLink class="nav-link" to="/branches">Branches</NuxtLink>
-        <NuxtLink class="nav-link" to="/contact">Contact</NuxtLink>
-        <NuxtLink class="button-primary mt-2 md:mt-0" to="/branches">Choisir sa branche <span aria-hidden="true">↗</span></NuxtLink>
+        <NuxtLink class="nav-link" :to="localizePath('/')">{{ t('Accueil') }}</NuxtLink>
+        <NuxtLink class="nav-link" :to="localizePath('/branches')">{{ t('Branches') }}</NuxtLink>
+        <NuxtLink class="nav-link" :to="localizePath('/contact')">{{ t('Contact') }}</NuxtLink>
+        <NuxtLink class="button-primary mt-2 md:mt-0" :to="localizePath('/branches')">{{ t('Choisir sa branche') }} <span aria-hidden="true">↗</span></NuxtLink>
+        <button
+          class="nav-link rounded-lg border border-[#E9C46A]/70 px-3 py-2"
+          type="button"
+          :aria-label="locale === 'fr' ? 'التبديل إلى العربية' : 'Passer en français'"
+          @click="toggleLocale"
+        >{{ locale === 'fr' ? 'العربية' : 'Français' }}</button>
       </nav>
     </div>
   </header>

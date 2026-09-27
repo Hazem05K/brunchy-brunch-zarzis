@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const config = useRuntimeConfig()
+const { t, localizePath } = useLocale()
 const siteKey = config.public.recaptchaSiteKey
 const staticSite = config.public.staticSite
 const form = reactive({
@@ -55,47 +56,47 @@ async function submitContact() {
 <template>
   <form class="space-y-6" @submit.prevent="submitContact">
     <div v-if="feedback" :class="feedback.type === 'success' ? 'notice-success' : 'notice-error'" role="status" aria-live="polite">
-      {{ feedback.text }}
+      {{ t(feedback.text) }}
     </div>
     <div v-if="staticSite" class="notice-info" role="status">
-      L’envoi des messages est désactivé sur cette version statique : aucun serveur n’est disponible pour transmettre votre message. Utilisez les coordonnées de contact affichées sur cette page.
+      {{ t('L’envoi des messages est désactivé sur cette version statique : aucun serveur n’est disponible pour transmettre votre message. Utilisez les coordonnées de contact affichées sur cette page.') }}
     </div>
     <div v-else-if="!configReady" class="notice-info" role="status">
-      Le formulaire sera disponible après la configuration de reCAPTCHA.
+      {{ t('Le formulaire sera disponible après la configuration de reCAPTCHA.') }}
     </div>
 
     <div class="grid gap-5 sm:grid-cols-2">
       <label class="field-label">
-        <span>Nom et prénom <span aria-hidden="true">*</span></span>
+        <span>{{ t('Nom et prénom') }} <span aria-hidden="true">*</span></span>
         <input v-model.trim="form.name" class="field-input" name="name" autocomplete="name" maxlength="100" required>
       </label>
       <label class="field-label">
-        <span>Téléphone <span aria-hidden="true">*</span></span>
-        <input v-model.trim="form.phone" class="field-input" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+216 00 000 000" required>
+        <span>{{ t('Téléphone') }} <span aria-hidden="true">*</span></span>
+        <input v-model.trim="form.phone" class="field-input" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+216 00 000 000" dir="ltr" required>
       </label>
       <label class="field-label sm:col-span-2">
-        <span>E-mail <span class="font-normal text-slate-400">(facultatif)</span></span>
-        <input v-model.trim="form.email" class="field-input" name="email" type="email" autocomplete="email" maxlength="254">
+        <span>{{ t('E-mail') }} <span class="font-normal text-slate-400">({{ t('facultatif') }})</span></span>
+        <input v-model.trim="form.email" class="field-input" name="email" type="email" autocomplete="email" maxlength="254" dir="ltr">
       </label>
       <label class="field-label sm:col-span-2">
-        <span>Votre message <span aria-hidden="true">*</span></span>
-        <textarea v-model.trim="form.message" class="field-input min-h-40 resize-y" name="message" minlength="10" maxlength="2000" placeholder="Comment pouvons-nous vous aider ?" required />
+        <span>{{ t('Votre message') }} <span aria-hidden="true">*</span></span>
+        <textarea v-model.trim="form.message" class="field-input min-h-40 resize-y" name="message" minlength="10" maxlength="2000" :placeholder="t('Comment pouvons-nous vous aider ?')" required />
         <span class="mt-1 text-xs font-normal text-slate-400">{{ form.message.length }}/2000 caractères</span>
       </label>
     </div>
 
     <label class="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-      Ne pas remplir ce champ
+      {{ t('Ne pas remplir ce champ') }}
       <input v-model="form.website" name="website" tabindex="-1" autocomplete="off">
     </label>
 
     <RecaptchaCheckbox v-if="configReady" ref="captcha" v-model="recaptchaToken" :site-key="siteKey" />
     <p class="text-xs leading-5 text-slate-500">
-      Votre message sera envoyé à l’équipe Brunchy Brunch uniquement pour répondre à votre demande.
-      <NuxtLink to="/privacy" class="font-semibold text-navy underline underline-offset-2">Confidentialité</NuxtLink>
+      {{ t('Votre message sera envoyé à l’équipe Brunchy Brunch uniquement pour répondre à votre demande.') }}
+      <NuxtLink :to="localizePath('/privacy')" class="font-semibold text-navy underline underline-offset-2">{{ t('Confidentialité') }}</NuxtLink>
     </p>
     <button class="button-primary w-full sm:w-auto" type="submit" :disabled="loading || !configReady || !recaptchaToken">
-      {{ staticSite ? 'Envoi indisponible' : loading ? 'Envoi en cours…' : 'Envoyer mon message' }}
+      {{ staticSite ? t('Envoi indisponible') : loading ? t('Envoi en cours…') : t('Envoyer mon message') }}
       <span v-if="!loading" aria-hidden="true">→</span>
     </button>
   </form>

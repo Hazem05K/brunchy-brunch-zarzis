@@ -3,6 +3,7 @@ import type { Branch } from '~/data/branches'
 
 defineProps<{ branches: Branch[] }>()
 
+const { t, direction } = useLocale()
 const track = ref<HTMLElement>()
 
 function move(direction: -1 | 1) {
@@ -18,18 +19,20 @@ function move(direction: -1 | 1) {
 <template>
   <div>
     <div class="mb-6 flex justify-end gap-2">
-      <button class="carousel-arrow" type="button" aria-label="Branches précédentes" @click="move(-1)">←</button>
-      <button class="carousel-arrow" type="button" aria-label="Branches suivantes" @click="move(1)">→</button>
+      <button class="carousel-arrow" type="button" :aria-label="t('Branches précédentes')" @click="move(-1)">←</button>
+      <button class="carousel-arrow" type="button" :aria-label="t('Branches suivantes')" @click="move(1)">→</button>
     </div>
     <div
       ref="track"
+      dir="ltr"
       class="branch-track -mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-8 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0"
-      aria-label="Galerie des points de vente"
+      :aria-label="t('Galerie des branches')"
     >
       <div
         v-for="branch in branches"
         :key="branch.id"
         data-branch-card
+        :dir="direction"
         class="w-[min(82vw,21rem)] shrink-0 snap-start sm:w-[min(48vw,22rem)] lg:w-[calc((100%-2.5rem)/3)]"
       >
         <BranchCard :branch="branch" />

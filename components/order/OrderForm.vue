@@ -5,6 +5,7 @@ const props = defineProps<{
 }>()
 
 const config = useRuntimeConfig()
+const { t, localizePath } = useLocale()
 const siteKey = config.public.recaptchaSiteKey
 const staticSite = config.public.staticSite
 const form = reactive({
@@ -70,63 +71,63 @@ async function submitOrder() {
   <form class="space-y-6" @submit.prevent="submitOrder">
     <input type="hidden" name="branchId" :value="branchId">
     <div v-if="feedback" :class="feedback.type === 'success' ? 'notice-success' : 'notice-error'" role="status" aria-live="polite">
-      {{ feedback.text }}
+      {{ t(feedback.text) }}
     </div>
     <div v-if="staticSite" class="notice-info" role="status">
-      L’envoi des demandes est désactivé sur cette version statique : aucun serveur n’est disponible pour transmettre votre commande. Consultez la page Contact pour les coordonnées disponibles.
+      {{ t('L’envoi des demandes est désactivé sur cette version statique : aucun serveur n’est disponible pour transmettre votre commande. Consultez la page Contact pour les coordonnées disponibles.') }}
     </div>
     <div v-else-if="!configReady" class="notice-info" role="status">
-      Le formulaire de demande pour {{ branchName }} sera disponible après la configuration de reCAPTCHA. Vous pouvez nous contacter pour toute question.
+      {{ t('Le formulaire de demande pour {name} sera disponible après la configuration de reCAPTCHA. Vous pouvez nous contacter pour toute question.', { name: branchName }) }}
     </div>
 
     <div class="grid gap-5 sm:grid-cols-2">
       <label class="field-label">
-        <span>Nom et prénom <span aria-hidden="true">*</span></span>
+        <span>{{ t('Nom et prénom') }} <span aria-hidden="true">*</span></span>
         <input v-model.trim="form.name" class="field-input" name="name" autocomplete="name" maxlength="100" required>
       </label>
       <label class="field-label">
-        <span>Téléphone <span aria-hidden="true">*</span></span>
-        <input v-model.trim="form.phone" class="field-input" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+216 00 000 000" required>
+        <span>{{ t('Téléphone') }} <span aria-hidden="true">*</span></span>
+        <input v-model.trim="form.phone" class="field-input" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+216 00 000 000" dir="ltr" required>
       </label>
       <label class="field-label">
-        <span>E-mail <span class="font-normal text-slate-400">(facultatif)</span></span>
-        <input v-model.trim="form.email" class="field-input" name="email" type="email" autocomplete="email" maxlength="254">
+        <span>{{ t('E-mail') }} <span class="font-normal text-slate-400">({{ t('facultatif') }})</span></span>
+        <input v-model.trim="form.email" class="field-input" name="email" type="email" autocomplete="email" maxlength="254" dir="ltr">
       </label>
       <label class="field-label">
-        <span>Nombre de box <span aria-hidden="true">*</span></span>
-        <input v-model.number="form.boxes" class="field-input" name="boxes" type="number" min="1" max="30" inputmode="numeric" required>
+        <span>{{ t('Nombre de box') }} <span aria-hidden="true">*</span></span>
+        <input v-model.number="form.boxes" class="field-input" name="boxes" type="number" min="1" max="30" inputmode="numeric" dir="ltr" required>
       </label>
       <label class="field-label sm:col-span-2">
-        <span>Adresse de livraison <span aria-hidden="true">*</span></span>
+        <span>{{ t('Adresse de livraison') }} <span aria-hidden="true">*</span></span>
         <textarea v-model.trim="form.address" class="field-input min-h-24 resize-y" name="address" autocomplete="street-address" maxlength="300" required />
       </label>
       <label class="field-label">
-        <span>Date souhaitée <span aria-hidden="true">*</span></span>
-        <input v-model="form.date" class="field-input" name="date" type="date" :min="minDate" required>
+        <span>{{ t('Date souhaitée') }} <span aria-hidden="true">*</span></span>
+        <input v-model="form.date" class="field-input" name="date" type="date" :min="minDate" dir="ltr" required>
       </label>
       <label class="field-label">
-        <span>Heure souhaitée <span aria-hidden="true">*</span></span>
-        <input v-model="form.time" class="field-input" name="time" type="time" required>
+        <span>{{ t('Heure souhaitée') }} <span aria-hidden="true">*</span></span>
+        <input v-model="form.time" class="field-input" name="time" type="time" dir="ltr" required>
       </label>
       <label class="field-label sm:col-span-2">
-        <span>Votre commande <span aria-hidden="true">*</span></span>
-        <textarea v-model.trim="form.description" class="field-input min-h-32 resize-y" name="description" maxlength="1500" placeholder="Indiquez ce que vous souhaitez commander..." required />
+        <span>{{ t('Votre commande') }} <span aria-hidden="true">*</span></span>
+        <textarea v-model.trim="form.description" class="field-input min-h-32 resize-y" name="description" maxlength="1500" :placeholder="t('Indiquez ce que vous souhaitez commander...')" required />
         <span class="mt-1 text-xs font-normal text-slate-400">{{ form.description.length }}/1500 caractères</span>
       </label>
     </div>
 
     <label class="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-      Ne pas remplir ce champ
+      {{ t('Ne pas remplir ce champ') }}
       <input v-model="form.website" name="website" tabindex="-1" autocomplete="off">
     </label>
 
     <RecaptchaCheckbox v-if="configReady" ref="captcha" v-model="recaptchaToken" :site-key="siteKey" />
     <p class="text-xs leading-5 text-slate-500">
-      Les informations fournies sont utilisées uniquement pour traiter votre demande. L’envoi d’une demande ne confirme pas la commande.
-      <NuxtLink to="/privacy" class="font-semibold text-navy underline underline-offset-2">En savoir plus</NuxtLink>
+      {{ t('Les informations fournies sont utilisées uniquement pour traiter votre demande. L’envoi d’une demande ne confirme pas la commande.') }}
+      <NuxtLink :to="localizePath('/privacy')" class="font-semibold text-navy underline underline-offset-2">{{ t('En savoir plus') }}</NuxtLink>
     </p>
     <button class="button-primary w-full sm:w-auto" type="submit" :disabled="loading || !configReady || !recaptchaToken">
-      {{ staticSite ? 'Envoi indisponible' : loading ? 'Envoi en cours…' : 'Commander' }}
+      {{ staticSite ? t('Envoi indisponible') : loading ? t('Envoi en cours…') : t('Commander') }}
       <span v-if="!loading" aria-hidden="true">→</span>
     </button>
   </form>

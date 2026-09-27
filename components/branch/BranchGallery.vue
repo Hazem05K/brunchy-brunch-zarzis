@@ -7,6 +7,7 @@ const props = defineProps<{
 }>()
 
 const appBaseURL = useRuntimeConfig().app.baseURL
+const { t, direction } = useLocale()
 const track = ref<HTMLElement>()
 const activeIndex = ref(0)
 let updateFrame = 0
@@ -47,25 +48,25 @@ onBeforeUnmount(() => cancelAnimationFrame(updateFrame))
 </script>
 
 <template>
-  <section v-if="photos.length" class="bg-white py-14 sm:py-18" :aria-label="`Galerie photo de la branche ${branchName}`">
+  <section v-if="photos.length" class="bg-white py-14 sm:py-18" :aria-label="t('Galerie photo de la branche {name}', { name: branchName })">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <div class="mb-6 flex items-end justify-between gap-4">
         <div>
-          <p class="eyebrow">Un peu de gourmandise</p>
-          <h2 class="section-title mt-2 text-3xl sm:text-4xl">{{ branchName }} en images</h2>
-          <p class="mt-2 text-sm text-slate-500">Photos d’ambiance uniquement illustratives.</p>
+          <p class="eyebrow">{{ t('Un peu de gourmandise') }}</p>
+          <h2 class="section-title mt-2 text-3xl sm:text-4xl">{{ t('{name} en images', { name: branchName }) }}</h2>
+          <p class="mt-2 text-sm text-slate-500">{{ t('Photos d’ambiance uniquement illustratives.') }}</p>
         </div>
         <div class="flex shrink-0 gap-2">
           <button
             class="gallery-arrow"
             type="button"
-            :aria-label="`Photo précédente de ${branchName}`"
+            :aria-label="t('Photo précédente de {name}', { name: branchName })"
             @click="movePhoto(-1)"
           >←</button>
           <button
             class="gallery-arrow"
             type="button"
-            :aria-label="`Photo suivante de ${branchName}`"
+            :aria-label="t('Photo suivante de {name}', { name: branchName })"
             @click="movePhoto(1)"
           >→</button>
         </div>
@@ -73,39 +74,41 @@ onBeforeUnmount(() => cancelAnimationFrame(updateFrame))
 
       <div
         ref="track"
+        dir="ltr"
         class="gallery-track -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:gap-5 sm:px-8 lg:mx-0 lg:px-0"
-        :aria-label="`Galerie de ${photos.length} photos illustratives`"
+        :aria-label="t('Galerie de {count} photos illustratives', { count: photos.length })"
         @scroll.passive="updateActivePhoto"
       >
         <figure
           v-for="(photo, index) in photos"
           :key="photo"
+          :dir="direction"
           class="relative aspect-[1.12] w-[86%] shrink-0 snap-start overflow-hidden rounded-[1.5rem] bg-mist shadow-card sm:aspect-[1.55] sm:w-[72%] lg:w-[68%]"
-          :aria-label="`Photo ${index + 1} sur ${photos.length}`"
+          :aria-label="t('Photo {index} sur {count}', { index: index + 1, count: photos.length })"
         >
           <img
             class="size-full object-cover"
             :src="appPath(photo, appBaseURL)"
-            :alt="`Photo culinaire illustrative ${index + 1} pour ${branchName}, sans lien avec son menu réel`"
+            :alt="t('Photo culinaire illustrative {index} pour {name}, sans lien avec son menu réel', { index: index + 1, name: branchName })"
             width="1100"
             height="730"
             loading="lazy"
             decoding="async"
           >
           <figcaption class="absolute bottom-3 right-3 rounded-lg border border-white/25 bg-navy/75 px-3 py-1.5 text-[10px] font-semibold text-white backdrop-blur">
-            Illustration · {{ index + 1 }} / {{ photos.length }}
+            {{ t('Illustration · {index} / {count}', { index: index + 1, count: photos.length }) }}
           </figcaption>
         </figure>
       </div>
 
-      <div class="mt-5 flex justify-center gap-2" role="group" :aria-label="`Choisir une photo de ${branchName}`">
+      <div class="mt-5 flex justify-center gap-2" role="group" :aria-label="t('Choisir une photo de {name}', { name: branchName })">
         <button
           v-for="(photo, index) in photos"
           :key="photo"
           class="gallery-dot"
           :class="{ 'gallery-dot-active': index === activeIndex }"
           type="button"
-          :aria-label="`Afficher la photo ${index + 1}`"
+          :aria-label="t('Afficher la photo {index}', { index: index + 1 })"
           :aria-current="index === activeIndex ? 'true' : undefined"
           @click="showPhoto(index)"
         />

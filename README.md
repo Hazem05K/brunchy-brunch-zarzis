@@ -20,6 +20,10 @@ Copiez `.env.example` vers `.env` avec votre explorateur ou la commande `Copy-It
 
 Le serveur local est disponible sur `http://localhost:3000`.
 
+## Langues
+
+Le site est disponible en français et en arabe. Les pages françaises conservent leurs URL et les pages arabes sont accessibles sous `/ar/` (par exemple `/ar/contact` et `/ar/branches/classic`). Le sélecteur de langue ouvre l’URL correspondante dans l’autre langue. Chaque version définit sa langue et son sens d’écriture dans le document; les textes traduits sont centralisés dans `utils/translations.ts`.
+
 ## Build statique et prévisualisation
 
 ```powershell
@@ -94,7 +98,7 @@ Les photos temporaires du hero, des cartes et des galeries (`public/images/*illu
 
 ## SEO
 
-Les pages définissent titres, descriptions et métadonnées Open Graph/Twitter, ainsi qu’un canonical lorsque `NUXT_PUBLIC_SITE_URL` est configurée. La page d’accueil utilise un Schema.org `Restaurant` sans adresse, téléphone, horaires, prix, note ou coordonnées inventés. `robots.txt` et `sitemap.xml` sont servis par Nitro. Ajoutez le domaine réel avant le déploiement pour obtenir des URLs canoniques et sitemap complètes.
+Les pages définissent des titres, descriptions et métadonnées Open Graph/Twitter. Chaque page française et arabe définit son URL canonique et des liens `hreflang` (`fr-TN`, `ar-TN` et `x-default`). Le sitemap inclut les deux langues. Ces URL complètes dépendent de `NUXT_PUBLIC_SITE_URL`, renseignée automatiquement par le workflow Pages; mettez-la à jour pour un domaine personnalisé. La page d’accueil utilise un Schema.org `Restaurant` sans adresse, téléphone, horaires, prix, note ou coordonnées inventés.
 
 ## Déploiement Oxahost
 

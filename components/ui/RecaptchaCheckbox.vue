@@ -26,6 +26,7 @@ declare global {
 const container = ref<HTMLElement>()
 const widgetId = ref<number>()
 const loadError = ref(false)
+const { t } = useLocale()
 let scriptPromise: Promise<void> | undefined
 
 function loadApi() {
@@ -86,7 +87,7 @@ onMounted(async () => {
   <div class="min-h-[78px]">
     <div ref="container" />
     <p v-if="loadError" class="mt-2 text-sm text-red-700" role="alert">
-      Impossible de charger reCAPTCHA. Actualisez la page ou réessayez plus tard.
+      {{ t('Impossible de charger reCAPTCHA. Actualisez la page ou réessayez plus tard.') }}
     </p>
   </div>
 </template>

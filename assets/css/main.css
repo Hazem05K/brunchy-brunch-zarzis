@@ -27,7 +27,7 @@
     display: inline-block;
     width: 0.5rem;
     height: 0.5rem;
-    margin-right: 0.55rem;
+    margin-inline-end: 0.55rem;
     border-radius: 9999px;
     background: #f4a261;
     content: '';
@@ -80,5 +80,18 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  html[dir='rtl'] {
+    font-family: Tahoma, Arial, sans-serif;
+  }
+
+  html[dir='rtl'] :is(h1, h2, h3, .font-display) {
+    font-family: Tahoma, Arial, sans-serif;
+    letter-spacing: normal;
+  }
+
+  html[dir='rtl'] .eyebrow {
+    letter-spacing: normal;
   }
 }
