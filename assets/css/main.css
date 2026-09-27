@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .button-primary {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-navy px-5 py-3 text-sm font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-orange hover:text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
+  }
+
+  .button-outline {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-xl border border-[#E9C46A] bg-white px-5 py-3 text-sm font-bold text-navy transition duration-200 hover:-translate-y-0.5 hover:border-orange hover:bg-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy;
+  }
+
+  .button-light {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-white px-5 py-3 text-sm font-bold text-navy transition duration-200 hover:-translate-y-0.5 hover:bg-sky focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white;
+  }
+
+  .section-title {
+    @apply font-display text-4xl font-normal leading-tight text-navy sm:text-5xl;
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.2em] text-navy;
+  }
+
+  .eyebrow::before {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.55rem;
+    border-radius: 9999px;
+    background: #f4a261;
+    content: '';
+  }
+
+  .link-arrow {
+    @apply inline-flex items-center gap-2 font-bold text-navy transition hover:gap-3;
+  }
+}
+
+:root {
+  color: #173759;
+  background: #fff5e6;
+  font-family: Manrope, Arial, Helvetica, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-weight: 400;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+}
+
+::selection {
+  color: #022252;
+  background: #afe0fe;
+}
+
+:focus-visible {
+  outline: 3px solid #f4a261;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
